@@ -1,5 +1,5 @@
 <template>
   <div>
-    <span>Underconstruction</span>
+    <slot></slot>
   </div>
 </template>

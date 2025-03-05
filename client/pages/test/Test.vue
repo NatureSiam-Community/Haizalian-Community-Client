@@ -12,8 +12,10 @@
 
 <script lang="ts" setup>
 const { t, locale } = useI18n()
+const { setLanguageCode } = useLanguageStore()
 
 const switchLocale = (l: 'en' | 'th') => {
+  setLanguageCode(l)
   locale.value = l
 }
 
