@@ -57,10 +57,10 @@ export const citizenList: citizenDetail[] = [
   {
     cid: 'ITA-2480744211-004',
     profileName: {
-      firstName: 'Kitsuki',
+      firstName: 'หมาปอ',
       middleName: undefined,
-      lastName: 'Unkeaw',
-      nickName: 'Kitsuki',
+      lastName: undefined,
+      nickName: '',
     },
   },
   {
