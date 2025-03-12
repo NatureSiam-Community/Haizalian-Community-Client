@@ -1,1 +1,5 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+.test-dawawd {
+  @apply text-yellow-800;
+}

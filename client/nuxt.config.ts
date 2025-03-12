@@ -11,4 +11,9 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
   i18n: { vueI18n: './i18n.config.ts' },
+
+  components: [
+    { path: '@/components/common', pathPrefix: false },
+    { path: '@/components/pages', pathPrefix: false },
+  ],
 })

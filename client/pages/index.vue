@@ -1,5 +1,6 @@
 <template>
-  <div class="mx-auto w-[400px]">
+  <div class=""></div>
+  <!-- <div class="mx-auto w-[400px]">
     <div>Citizen List</div>
 
     <div class="space-y-2">
@@ -12,9 +13,19 @@
         </p>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script lang="ts" setup>
 import { citizenList } from '~/models/mocked/citizen.mocked'
 </script>
+
+<style scoped lang="scss">
+.testdwadwadwa {
+  color: var(text-red-400);
+  background-color: var(bg-red-400);
+  .testtest {
+    color: darkgray;
+  }
+}
+</style>
