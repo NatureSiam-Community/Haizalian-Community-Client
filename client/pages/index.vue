@@ -1,5 +1,6 @@
 <template>
   <div class=""></div>
+  <div class="testtest">dawpmdawod</div>
   <!-- <div class="mx-auto w-[400px]">
     <div>Citizen List</div>
 
@@ -24,8 +25,9 @@ import { citizenList } from '~/models/mocked/citizen.mocked'
 .testdwadwadwa {
   color: var(text-red-400);
   background-color: var(bg-red-400);
-  .testtest {
-    color: darkgray;
-  }
+}
+.testtest {
+  color: darkgray;
+  @apply bg-green-400;
 }
 </style>
