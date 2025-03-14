@@ -2,6 +2,13 @@
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
+  runtimeConfig: {
+    public: {
+      appDomain: process.env.APP_DOMAIN,
+      gitHash: process.env.GITHUB_SHA,
+      releaseVersion: process.env.RELEASE_VERSION,
+    },
+  },
   ssr: false,
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
