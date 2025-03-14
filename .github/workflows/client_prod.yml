@@ -11,23 +11,11 @@ defaults:
     working-directory: ./client
 
 env:
-  NODE_VERSION: 18
+  NODE_VERSION: 20
   ENV: production
 
 jobs:
-  # test-application:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - name: Application Testing
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: ${{env.NODE_VERSION}}
-  #         cache: "yarn"
-  #     - run: |
-  #         yarn
-  #         yarn build
-  create-deployment-artifact:
+  build-application:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -45,74 +33,95 @@ jobs:
           yarn build
           cp .env .output/server/.env
           tar -czf "${GITHUB_SHA}".tar.gz .output
-      - name: Store Application Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: app-artifacts
-          path: ${{github.sha}}.tar.gz
 
-  prepare-release:
-    needs: create-deployment-artifact
-    name: Prepare Release On Server
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get Artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: app-artifacts
-      - name: Upload Artifacts
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{secrets.PRODUCTION_CLIENT_IP}}
-          port: "22"
-          username: ${{secrets.PRODUCTION_CLIENT_USERNAME}}
-          key: ${{secrets.PRODUCTION_CLIENT_PRIVATE_KEY}}
-          source: ${{github.sha}}.tar.gz
-          target: /www/html/artifacts
-      - name: Extrack Artifacts
-        uses: appleboy/ssh-action@master
-        env:
-          GITHUB_SHA: ${{github.sha}}
-        with:
-          host: ${{secrets.PRODUCTION_CLIENT_IP}}
-          port: "22"
-          username: ${{secrets.PRODUCTION_CLIENT_USERNAME}}
-          key: ${{secrets.PRODUCTION_CLIENT_PRIVATE_KEY}}
-          source: ${{github.sha}}.tar.gz
-          envs: GITHUB_SHA
-          script: |
-            mkdir -p "/www/html/releases/${GITHUB_SHA}"
-            tar xzf /www/html/artifacts/${GITHUB_SHA}.tar.gz -C "/www/html/releases/${GITHUB_SHA}"
-            rm -rf /www/html/artifacts/${GITHUB_SHA}.tar.gz
+# jobs:
+#   create-deployment-artifact:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v3
+#       - name: Create Application Artifact
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: ${{env.NODE_VERSION}}
+#           cache: "yarn"
+#       - run: |
+#           touch .env
+#           echo APP_DOMAIN=${{vars.PRODUCTION_CLIENT_DOMAIN}} >> .env
+#           echo GITHUB_SHA=${{github.sha}} >> .env
+#           echo RELEASE_VERSION=${{github.sha}} >> .env
+#           yarn
+#           yarn build
+#           cp .env .output/server/.env
+#           tar -czf "${GITHUB_SHA}".tar.gz .output
+#       - name: Store Application Artifact
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: client-site-artifacts
+#           path: ${{github.sha}}.tar.gz
 
-  activate-release:
-    needs: prepare-release
-    name: Prepare Release On Server
-    runs-on: ubuntu-latest
-    steps:
-      - name: Activate Release
-        uses: appleboy/ssh-action@master
-        env:
-          RELEASE_PATH: /www/html/releases/${{github.sha}}
-          ACTIVE_RELEASE_PATH: /www/htm/live
-        with:
-          host: ${{secrets.PRODUCTION_CLIENT_IP}}
-          port: "22"
-          username: ${{secrets.PRODUCTION_CLIENT_USERNAME}}
-          key: ${{secrets.PRODUCTION_CLIENT_PRIVATE_KEY}}
-          env: RELEASE_PATH,ACTIVE_RELEASE_PATH
-          script: |
-            ln -s -n -f $RELEASE_PATH $ACTIVE_RELEASE_PATH
-      - name: Clean Up Old Releases
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{secrets.PRODUCTION_CLIENT_IP}}
-          port: "22"
-          username: ${{secrets.PRODUCTION_CLIENT_USERNAME}}
-          key: ${{secrets.PRODUCTION_CLIENT_PRIVATE_KEY}}
-          scritp: |
-            cd /www/html/releases && ls -t -i | tail -n +4 | xargs rm -rf
-            cd /www/html/artifacts && rm -rf
-      - uses: geekyeggo/delete-artifact@v1
-        with:
-          name: app-artifacts
+#   prepare-release:
+#     needs: create-deployment-artifact
+#     name: Prepare Release On Server
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Get Artifacts
+#         uses: actions/download-artifact@v4
+#         with:
+#           name: client-site-artifacts
+#           path: ${{github.sha}}.tar.gz
+#       - name: Upload Artifacts To Server
+#         uses: appleboy/scp-action@master
+#         with:
+#           host: ${{secrets.PRODUCTION_CLIENT_IP}}
+#           port: "22"
+#           username: ${{secrets.PRODUCTION_CLIENT_USERNAME}}
+#           key: ${{secrets.PRODUCTION_CLIENT_PRIVATE_KEY}}
+#           source: ${{github.sha}}.tar.gz
+#           target: /www/html/artifacts
+#       - name: Extrack Artifacts
+#         uses: appleboy/ssh-action@master
+#         env:
+#           GITHUB_SHA: ${{github.sha}}
+#         with:
+#           host: ${{secrets.PRODUCTION_CLIENT_IP}}
+#           port: "22"
+#           username: ${{secrets.PRODUCTION_CLIENT_USERNAME}}
+#           key: ${{secrets.PRODUCTION_CLIENT_PRIVATE_KEY}}
+#           source: ${{github.sha}}.tar.gz
+#           envs: GITHUB_SHA
+#           script: |
+#             mkdir -p "/www/html/releases/${GITHUB_SHA}"
+#             tar xzf /www/html/artifacts/${GITHUB_SHA}.tar.gz -C "/www/html/releases/${GITHUB_SHA}"
+#             rm -rf /www/html/artifacts/${GITHUB_SHA}.tar.gz
+
+#   activate-release:
+#     needs: prepare-release
+#     name: Prepare Release On Server
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Activate Release
+#         uses: appleboy/ssh-action@master
+#         env:
+#           RELEASE_PATH: /www/html/releases/${{github.sha}}
+#           ACTIVE_RELEASE_PATH: /www/htm/live
+#         with:
+#           host: ${{secrets.PRODUCTION_CLIENT_IP}}
+#           port: "22"
+#           username: ${{secrets.PRODUCTION_CLIENT_USERNAME}}
+#           key: ${{secrets.PRODUCTION_CLIENT_PRIVATE_KEY}}
+#           env: RELEASE_PATH,ACTIVE_RELEASE_PATH
+#           script: |
+#             ln -s -n -f $RELEASE_PATH $ACTIVE_RELEASE_PATH
+#       - name: Clean Up Old Releases
+#         uses: appleboy/ssh-action@master
+#         with:
+#           host: ${{secrets.PRODUCTION_CLIENT_IP}}
+#           port: "22"
+#           username: ${{secrets.PRODUCTION_CLIENT_USERNAME}}
+#           key: ${{secrets.PRODUCTION_CLIENT_PRIVATE_KEY}}
+#           scritp: |
+#             cd /www/html/releases && ls -t -i | tail -n +4 | xargs rm -rf
+#             cd /www/html/artifacts && rm -rf
+#       - uses: geekyeggo/delete-artifact@v1
+#         with:
+#           name: app-artifacts
