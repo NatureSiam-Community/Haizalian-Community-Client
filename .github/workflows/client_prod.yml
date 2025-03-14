@@ -1,0 +1,58 @@
+name: Haizalian Client CI/CD Production
+
+on:
+  push:
+    branches: ["production"]
+  pull_request:
+    branches: ["production"]
+
+defaults:
+  run:
+    working-directory: ./client
+
+env:
+  ENV: production
+  NUXT_PUBLIC_API_URL: https://haizalian.com/
+
+jobs:
+  BuildAndDeploy:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18" # Replace with the version of Node.js your project uses
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Generate
+        run: yarn generate
+
+      - name: install ssh keys
+        # check this thread to understand why its needed: https://stackoverflow.com/a/70447517
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.PRODUCTION_CLIENT_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.PRODUCTION_CLIENT_IP }} > ~/.ssh/known_hosts
+
+      - name: Deploy to Server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.PRODUCTION_CLIENT_PRIVATE_KEY }} # Use your SSH private key stored as a GitHub secret
+        run: |
+          echo "$SSH_PRIVATE_KEY" > key.pem
+          chmod 600 key.pem
+          ssh -i key.pem ${{ secrets.PRODUCTION_CLIENT_USERNAME }}@${{ secrets.PRODUCTION_CLIENT_IP }} 'cd ${{ vars.PRODUCTION_CLIENT_DIR }} && git pull origin production && yarn install && yarn run start -p 3010'
+      - name: Clean up
+        run: rm -f key.pem
+
+        # scp -i key.pem -r ./* ${{ secrets.PRODUCTION_CLIENT_USERNAME }}@${{ secrets.PRODUCTION_CLIENT_IP }}:${{ vars.PRODUCTION_CLIENT_DIR }}
