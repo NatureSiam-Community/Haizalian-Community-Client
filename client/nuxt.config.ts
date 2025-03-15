@@ -16,6 +16,9 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/i18n', '@pinia/nuxt', 'pinia-plugin-persistedstate/nuxt'],
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      allowedHosts: [process.env.APP_DOMAIN || ''],
+    },
   },
   i18n: { vueI18n: './i18n.config.ts' },
 
