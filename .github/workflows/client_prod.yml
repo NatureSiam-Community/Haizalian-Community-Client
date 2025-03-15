@@ -25,6 +25,7 @@ jobs:
           node-version: ${{env.NODE_VERSION}}
           cache: "yarn"
       - run: |
+          pwd
           touch .env
           echo APP_DOMAIN=${{vars.PRODUCTION_CLIENT_DOMAIN}} >> .env
           echo GITHUB_SHA=${{github.sha}} >> .env
