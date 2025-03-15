@@ -11,48 +11,117 @@ defaults:
     working-directory: ./client
 
 env:
+  NODE_VERSION: 20
   ENV: production
-  NUXT_PUBLIC_API_URL: https://haizalian.com/
 
 jobs:
-  BuildAndDeploy:
+  build-application:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [20.x]
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Install Node.js
+      - uses: actions/checkout@v3
+      - name: Create Application Artifact
         uses: actions/setup-node@v3
         with:
-          node-version: "18" # Replace with the version of Node.js your project uses
+          node-version: ${{env.NODE_VERSION}}
           cache: "yarn"
+      - run: |
+          touch .env
+          echo APP_DOMAIN=${{vars.PRODUCTION_CLIENT_DOMAIN}} >> .env
+          echo GITHUB_SHA=${{github.sha}} >> .env
+          echo RELEASE_VERSION=${{github.sha}} >> .env
+          yarn
+          yarn build
+          cp .env .output/server/.env
+          tar -czf "${GITHUB_SHA}".tar.gz .output
 
-      - name: Install dependencies
-        run: yarn
+# jobs:
+#   create-deployment-artifact:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v3
+#       - name: Create Application Artifact
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: ${{env.NODE_VERSION}}
+#           cache: "yarn"
+#       - run: |
+#           touch .env
+#           echo APP_DOMAIN=${{vars.PRODUCTION_CLIENT_DOMAIN}} >> .env
+#           echo GITHUB_SHA=${{github.sha}} >> .env
+#           echo RELEASE_VERSION=${{github.sha}} >> .env
+#           yarn
+#           yarn build
+#           cp .env .output/server/.env
+#           tar -czf "${GITHUB_SHA}".tar.gz .output
+#       - name: Store Application Artifact
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: client-site-artifacts
+#           path: ${{github.sha}}.tar.gz
 
-      - name: Generate
-        run: yarn generate
+#   prepare-release:
+#     needs: create-deployment-artifact
+#     name: Prepare Release On Server
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Get Artifacts
+#         uses: actions/download-artifact@v4
+#         with:
+#           name: client-site-artifacts
+#           path: ${{github.sha}}.tar.gz
+#       - name: Upload Artifacts To Server
+#         uses: appleboy/scp-action@master
+#         with:
+#           host: ${{secrets.PRODUCTION_CLIENT_IP}}
+#           port: "22"
+#           username: ${{secrets.PRODUCTION_CLIENT_USERNAME}}
+#           key: ${{secrets.PRODUCTION_CLIENT_PRIVATE_KEY}}
+#           source: ${{github.sha}}.tar.gz
+#           target: /www/html/artifacts
+#       - name: Extrack Artifacts
+#         uses: appleboy/ssh-action@master
+#         env:
+#           GITHUB_SHA: ${{github.sha}}
+#         with:
+#           host: ${{secrets.PRODUCTION_CLIENT_IP}}
+#           port: "22"
+#           username: ${{secrets.PRODUCTION_CLIENT_USERNAME}}
+#           key: ${{secrets.PRODUCTION_CLIENT_PRIVATE_KEY}}
+#           source: ${{github.sha}}.tar.gz
+#           envs: GITHUB_SHA
+#           script: |
+#             mkdir -p "/www/html/releases/${GITHUB_SHA}"
+#             tar xzf /www/html/artifacts/${GITHUB_SHA}.tar.gz -C "/www/html/releases/${GITHUB_SHA}"
+#             rm -rf /www/html/artifacts/${GITHUB_SHA}.tar.gz
 
-      - name: install ssh keys
-        # check this thread to understand why its needed: https://stackoverflow.com/a/70447517
-        run: |
-          install -m 600 -D /dev/null ~/.ssh/id_rsa
-          echo "${{ secrets.PRODUCTION_CLIENT_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.PRODUCTION_CLIENT_IP }} > ~/.ssh/known_hosts
-
-      - name: Deploy to Server
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.PRODUCTION_CLIENT_PRIVATE_KEY }} # Use your SSH private key stored as a GitHub secret
-        run: |
-          echo "$SSH_PRIVATE_KEY" > key.pem
-          chmod 600 key.pem
-          ssh -i key.pem ${{ secrets.PRODUCTION_CLIENT_USERNAME }}@${{ secrets.PRODUCTION_CLIENT_IP }} 'cd ${{ vars.PRODUCTION_CLIENT_DIR }} && git pull origin production && yarn install && yarn run start -p 3010'
-      - name: Clean up
-        run: rm -f key.pem
-
-        # scp -i key.pem -r ./* ${{ secrets.PRODUCTION_CLIENT_USERNAME }}@${{ secrets.PRODUCTION_CLIENT_IP }}:${{ vars.PRODUCTION_CLIENT_DIR }}
+#   activate-release:
+#     needs: prepare-release
+#     name: Prepare Release On Server
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Activate Release
+#         uses: appleboy/ssh-action@master
+#         env:
+#           RELEASE_PATH: /www/html/releases/${{github.sha}}
+#           ACTIVE_RELEASE_PATH: /www/htm/live
+#         with:
+#           host: ${{secrets.PRODUCTION_CLIENT_IP}}
+#           port: "22"
+#           username: ${{secrets.PRODUCTION_CLIENT_USERNAME}}
+#           key: ${{secrets.PRODUCTION_CLIENT_PRIVATE_KEY}}
+#           env: RELEASE_PATH,ACTIVE_RELEASE_PATH
+#           script: |
+#             ln -s -n -f $RELEASE_PATH $ACTIVE_RELEASE_PATH
+#       - name: Clean Up Old Releases
+#         uses: appleboy/ssh-action@master
+#         with:
+#           host: ${{secrets.PRODUCTION_CLIENT_IP}}
+#           port: "22"
+#           username: ${{secrets.PRODUCTION_CLIENT_USERNAME}}
+#           key: ${{secrets.PRODUCTION_CLIENT_PRIVATE_KEY}}
+#           scritp: |
+#             cd /www/html/releases && ls -t -i | tail -n +4 | xargs rm -rf
+#             cd /www/html/artifacts && rm -rf
+#       - uses: geekyeggo/delete-artifact@v1
+#         with:
+#           name: app-artifacts
