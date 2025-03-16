@@ -2,6 +2,15 @@ export const ROUTES = {
   INDEX: {
     path: '/',
   },
+  INDEX_LOGIN: {
+    path: '/login',
+  },
+  INDEX_ABOUT: {
+    path: '/about',
+  },
+  INDEX_EXPLORE: {
+    path: '/explore',
+  },
   PROFILE_CITIZEN: {
     path: '/profile/citizen',
     startWith: true,
@@ -27,5 +36,12 @@ function getPermissionRoutesArray(permission: Array<{ path: string; startWith?: 
 }
 
 export const routePermission = {
-  visitor: getPermissionRoutesArray([ROUTES.INDEX, ROUTES.PROFILE_CITIZEN, ROUTES.PROFILE_GUARDIAN]),
+  visitor: getPermissionRoutesArray([
+    ROUTES.INDEX,
+    ROUTES.INDEX_ABOUT,
+    ROUTES.INDEX_LOGIN,
+    ROUTES.INDEX_EXPLORE,
+    ROUTES.PROFILE_CITIZEN,
+    ROUTES.PROFILE_GUARDIAN,
+  ]),
 }
