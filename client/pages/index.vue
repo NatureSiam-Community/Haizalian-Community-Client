@@ -16,7 +16,7 @@
     </div>
 
     <!-- Detail -->
-    <div class="z-10 local-main-body sticky space-y-10">
+    <div class="z-10 local-main-body sticky space-y-10 pb-32">
       <div class="flex justify-center">
         <div class="max-w-[500px] space-y-5 p-3 md:p-5">
           <p class="text-3xl font-roboto text-center">สำรวจดวงดาวอันห่างไกล</p>
@@ -37,9 +37,9 @@
       </div>
 
       <div class="flex justify-center">
-        <div class="text-center w-[500px]">
-          <p class="text-xl font-roboto">Header</p>
-          <p class="font-light">Another description</p>
+        <div class="max-w-[500px] space-y-5 p-3 md:p-5">
+          <p class="text-3xl font-roboto text-center">Header</p>
+          <p class="font-light font-kanit text-center">Another description</p>
         </div>
       </div>
 
@@ -53,10 +53,6 @@
           </div>
         </div>
       </div>
-
-      <div></div>
-
-      <div v-for="(item, index) in 1000" :key="index">{{ item }}</div>
     </div>
   </div>
 </template>
