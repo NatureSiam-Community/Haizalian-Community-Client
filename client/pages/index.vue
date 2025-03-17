@@ -16,7 +16,7 @@
     </div>
 
     <!-- Detail -->
-    <div class="z-10 bg-inherit sticky space-y-5">
+    <div class="z-10 local-main-body sticky space-y-10">
       <div class="flex justify-center">
         <div class="max-w-[500px] space-y-5 p-3 md:p-5">
           <p class="text-3xl font-roboto text-center">สำรวจดวงดาวอันห่างไกล</p>
@@ -28,25 +28,33 @@
       </div>
 
       <div class="flex gap-5 items-center justify-center">
-        <div class="h-[400px] bg-green-200 w-[300px] relative">
+        <div v-for="(item, index) in headerList.firstContent" :key="index" class="h-[400px] bg-green-200 w-[300px] relative">
           <div class="space-y-2 absolute bottom-0 p-3 bg-black/50 w-full h-28">
-            <p class="text-xl font-roboto text-center">ชีวิต</p>
-            <p class="text-center font-light">ใช้ชีวิตอย่างปราศจากข้อกังวลที่คุณไม่ได้ก่อขึ้นเอง เป็นตัวคุณในแบบที่คุณเป็น</p>
-          </div>
-        </div>
-        <div class="h-[400px] bg-green-200 w-[300px] relative">
-          <div class="space-y-2 absolute bottom-0 p-3 bg-black/50 w-full h-28">
-            <p class="text-xl font-roboto text-center">ความฝัน</p>
-            <p class="text-center font-light">ฝันได้ไกลกว่า ไปได้ไกลกว่า มีโอกาสมากมายให้คุณได้ไขว่คว้า</p>
-          </div>
-        </div>
-        <div class="h-[400px] bg-green-200 w-[300px] relative">
-          <div class="space-y-2 absolute bottom-0 p-3 bg-black/50 w-full h-28">
-            <p class="text-xl font-roboto text-center">การเดินทาง</p>
-            <p class="text-center font-light">เกิดใหม่เป็นคุณบนที่ที่คู่ควร และเลือกเส้นทางด้วยตัวคุณเอง</p>
+            <p class="text-xl font-roboto text-center">{{ item.title }}</p>
+            <p class="text-center font-light">{{ item.description }}</p>
           </div>
         </div>
       </div>
+
+      <div class="flex justify-center">
+        <div class="text-center w-[500px]">
+          <p class="text-xl font-roboto">Header</p>
+          <p class="font-light">Another description</p>
+        </div>
+      </div>
+
+      <div class="w-full flex justify-center">
+        <div class="grid grid-cols-1 md:grid-cols-2 max-w-[50rem] flex-1 gap-5">
+          <div v-for="(item, index) in headerList.secondContent" :key="index" class="flex-1 bg-green-300 h-[250px] relative">
+            <div class="absolute bottom-0 p-3 bg-black/40 w-full">
+              <p class="text-lg text-center">{{ item.title }}</p>
+              <p class="text-lg text-center font-light">{{ item.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div></div>
 
       <div v-for="(item, index) in 1000" :key="index">{{ item }}</div>
     </div>
@@ -57,11 +65,23 @@
 definePageMeta({
   layout: 'full',
 })
+
+const headerList = computed(() => ({
+  firstContent: [
+    { title: 'Life', description: 'Something...', imageUrl: '/index/content-1.jpg' },
+    { title: 'Dream', description: 'Something...', imageUrl: '/index/content-z.jpg' },
+    { title: 'Journal', description: 'Something...', imageUrl: '/index/content-3.jpg' },
+  ],
+  secondContent: [
+    { title: 'SOmething', description: 'Alsom something', imageUtl: '/index/content-4.jpg' },
+    { title: 'SOmething', description: 'Alsom something', imageUtl: '/index/content-5.jpg' },
+  ],
+}))
 </script>
 
 <style scoped lang="scss">
-.testdwadwadwa {
-  color: var(text-red-400);
-  background-color: var(bg-red-400);
+.local-main-body {
+  // background gradiand from black to white then to black, left to right
+  background: linear-gradient(90deg, #0d001b, #130125, #0d001b);
 }
 </style>
