@@ -32,18 +32,12 @@
 
     <div class="flex justify-center">
       <div class="space-y-4 w-full flex-1 md:max-w-[100vh]">
-        <div class="bg-white p-3 rounded-md w-full">SCREAM</div>
-        <div class="bg-white p-3 rounded-md w-full">SCREAM</div>
-        <div class="bg-white p-3 rounded-md w-full">SCREAM</div>
-        <div class="bg-white p-3 rounded-md w-full">SCREAM</div>
-        <div class="bg-white p-3 rounded-md w-full">SCREAM</div>
-        <div class="bg-white p-3 rounded-md w-full">SCREAM</div>
-        <div class="bg-white p-3 rounded-md w-full">SCREAM</div>
-        <div class="bg-white p-3 rounded-md w-full">SCREAM</div>
+        <div class="bg-green-700/15 border border-green-500/50 rounded-md font-kanit flex gap-2 items-center p-3">
+          <Icon name="material-symbols:add-triangle-outline" size="20" class="text-green-500"></Icon>
+          <span class="text-green-500">ยินดีต้อนรับ! อันนี้แค่หน้า Mock Up นะ เก็บรหัสหลังบัตรเอาไว้ดี ๆ :></span>
+        </div>
       </div>
     </div>
-    <!-- {{ router.currentRoute.value.params.id }}
-    {{ getLanguage() }} -->
   </div>
 </template>
 
