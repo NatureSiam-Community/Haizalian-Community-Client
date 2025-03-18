@@ -33,4 +33,10 @@ export default defineNuxtConfig({
   nitro: {
     preset: process.env.NITRO_PRESET || 'node-server',
   },
+
+  app: {
+    head: {
+      link: [{ rel: 'icon', type: 'image/png', href: 'icon/haizalian-icon.png' }],
+    },
+  },
 })
