@@ -7,9 +7,26 @@ export type citizenDetail = {
     lastName?: string
     nickName: string
   }
+  images: {
+    profile?: string
+    cover?: string
+  }
 }
 
 export const citizenList: citizenDetail[] = [
+  {
+    cid: 'ITA-2480914147-111',
+    lazerId: 'JNK-442-349',
+    profileName: {
+      firstName: 'Jeniva',
+      middleName: undefined,
+      lastName: 'Khongthanachaloemphon',
+      nickName: 'Jeniva',
+    },
+    images: {
+      profile: '/profiles/ITA-2480914147-111/profile.jpg',
+    },
+  },
   {
     cid: 'ITA-2480913418-101',
     lazerId: 'XKA-549-313',
@@ -18,6 +35,9 @@ export const citizenList: citizenDetail[] = [
       middleName: undefined,
       lastName: 'The Archer',
       nickName: 'Pastel',
+    },
+    images: {
+      profile: '/profiles/ITA-2480913418-101/profile.jpg',
     },
   },
   {
@@ -29,17 +49,9 @@ export const citizenList: citizenDetail[] = [
       lastName: 'Bangkaew',
       nickName: 'Bangkaew',
     },
+    images: {},
   },
-  {
-    cid: 'ITA-2480914147-111',
-    lazerId: 'JNK-442-349',
-    profileName: {
-      firstName: 'Jeniva',
-      middleName: undefined,
-      lastName: undefined,
-      nickName: 'Khongthanachaloemphon',
-    },
-  },
+
   {
     cid: 'ITA-2480189004-137',
     lazerId: 'JNR-971-757',
@@ -48,6 +60,9 @@ export const citizenList: citizenDetail[] = [
       middleName: undefined,
       lastName: 'Kuwala',
       nickName: 'Racheal',
+    },
+    images: {
+      profile: '/profiles/ITA-2480189004-137/profile.jpg',
     },
   },
   {
@@ -59,6 +74,9 @@ export const citizenList: citizenDetail[] = [
       lastName: 'Kung',
       nickName: 'Muhan',
     },
+    images: {
+      profile: '/profiles/ITA-2480927633-789/profile.jpg',
+    },
   },
   {
     cid: 'ITA-2480092101-712',
@@ -68,6 +86,9 @@ export const citizenList: citizenDetail[] = [
       middleName: undefined,
       lastName: 'Luangaram',
       nickName: 'Emerett',
+    },
+    images: {
+      profile: '/profiles/ITA-2480092101-712/profile.jpg',
     },
   },
   {
@@ -79,6 +100,9 @@ export const citizenList: citizenDetail[] = [
       lastName: 'Mamoru',
       nickName: 'Mamoru',
     },
+    images: {
+      profile: '/profiles/ITA-2480936182-021/profile.jpg',
+    },
   },
   {
     cid: 'ITA-2480936912-609',
@@ -88,6 +112,9 @@ export const citizenList: citizenDetail[] = [
       middleName: undefined,
       lastName: 'Beaver',
       nickName: 'Caster',
+    },
+    images: {
+      profile: '/profiles/ITA-2480936912-609/profile.jpg',
     },
   },
   {
@@ -99,6 +126,9 @@ export const citizenList: citizenDetail[] = [
       lastName: 'Nuuto',
       nickName: 'Azzie',
     },
+    images: {
+      profile: '/profiles/ITA-2480914451-691/profile.jpg',
+    },
   },
   {
     cid: 'ITA-2480907441-761',
@@ -109,6 +139,7 @@ export const citizenList: citizenDetail[] = [
       lastName: 'Limampai',
       nickName: 'Setal',
     },
+    images: {},
   },
   {
     cid: 'ITA-2480744211-004',
@@ -118,6 +149,9 @@ export const citizenList: citizenDetail[] = [
       middleName: undefined,
       lastName: 'NAWOW',
       nickName: 'HOCK',
+    },
+    images: {
+      profile: '/profiles/ITA-2480744211-004/profile.jpg',
     },
   },
 ]
