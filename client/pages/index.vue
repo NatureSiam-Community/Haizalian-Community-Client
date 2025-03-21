@@ -73,6 +73,10 @@ definePageMeta({
   layout: 'full',
 })
 
+useHead({
+  title: 'Haizalia - หน้าหลัก',
+})
+
 const headerList = computed(() => ({
   firstContent: [
     {

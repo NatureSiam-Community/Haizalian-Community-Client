@@ -11,7 +11,7 @@
         <div v-if="item.type === 'link'">
           <span class="font-roboto">{{ item.text }}</span>
         </div>
-        <div v-if="item.type === 'button'">
+        <div v-if="item.type === 'button'" class="shrink-0">
           <img src="@/public/icon/haizalian-icon.png" alt="logo" class="w-10 h-10 hover:h-12 hover:w-12 duration-500" />
         </div>
       </div>

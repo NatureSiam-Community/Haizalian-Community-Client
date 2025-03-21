@@ -24,9 +24,13 @@
 <script lang="ts" setup>
 import { ROUTES } from '~/config/permission.route'
 
+useHead({
+  title: 'Haizalia - เข้าสู่ระบบ',
+})
+
 const router = useRouter()
 
 const submitLoginDetail = () => {
-  router.push({ path: ROUTES.INDEX_ABOUT.path })
+  router.push({ path: ROUTES.INDEX_EXPLORE.path })
 }
 </script>
